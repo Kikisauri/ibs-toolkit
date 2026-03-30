@@ -4,47 +4,52 @@ import datetime
 import gspread
 from google.oauth2.service_account import Credentials
 
-# ============================================================
-# GOOGLE SHEETS SETUP
-# ============================================================
-# We define the 'scopes' — these tell Google what permissions
-# our app needs. We need Sheets and Drive access.
-
 SCOPES = [
     'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive'
 ]
 
-def get_sheet():
-    """Connect to Google Sheets and return the first worksheet.
+def get_sheet(tab_name):
+    """Connect to Google Sheets and return the specified tab.
     
-    st.secrets reads from your secrets.toml file locally, and
-    from Streamlit Cloud's secrets panel when deployed.
+    We added 'tab_name' as a parameter so we can reuse this
+    function for both the symptoms tab and medications tab.
+    Instead of always opening sheet1, we now open by name.
     """
     creds = Credentials.from_service_account_info(
         st.secrets["gcp_service_account"],
         scopes=SCOPES
     )
     client = gspread.authorize(creds)
-    # Open the sheet by name — must match exactly
-    sheet = client.open("IBS Tracker Data").sheet1
+    # .worksheet() opens a specific tab by name instead of
+    # always grabbing the first sheet.
+    sheet = client.open("IBS Tracker Data").worksheet(tab_name)
     return sheet
 
-def load_data():
-    """Load all rows from Google Sheets into a DataFrame."""
-    sheet = get_sheet()
+def load_data(tab_name):
+    """Load all rows from a specific tab into a DataFrame."""
+    sheet = get_sheet(tab_name)
     data = sheet.get_all_records()
-    # If sheet is empty (only headers), return empty DataFrame
     if not data:
-        return pd.DataFrame(columns=['date', 'food', 'symptoms', 'severity'])
+        if tab_name == 'Sheet1':
+            return pd.DataFrame(columns=['date', 'food', 'symptoms', 'severity'])
+        else:
+            return pd.DataFrame(columns=['date', 'medication', 'time'])
     return pd.DataFrame(data)
 
-def save_entry(date, food, symptoms, severity):
-    """Append a new row to the Google Sheet."""
-    sheet = get_sheet()
-    # .append_row() adds a new row at the bottom of the sheet.
-    # We pass the values in the same order as our column headers.
+def save_symptom_entry(date, food, symptoms, severity):
+    """Append a new row to the symptoms tab."""
+    sheet = get_sheet('Sheet1')
     sheet.append_row([str(date), food, symptoms, severity])
+
+def save_med_entry(date, medication, time):
+    """Append a new row to the medications tab.
+    
+    A separate save function keeps things clean and clear —
+    each function does exactly one job.
+    """
+    sheet = get_sheet('Medications')
+    sheet.append_row([str(date), medication, time])
 
 
 # ============================================================
@@ -56,7 +61,10 @@ st.title('IBS Symptom Tracker')
 st.write('Track your food, symptoms, and triggers in one place.')
 
 st.sidebar.title('Menu')
-page = st.sidebar.radio('Go to', ['Add Entry', 'View Entries', 'Analyze Data', 'Trigger Detection'])
+page = st.sidebar.radio(
+    'Go to',
+    ['Add Entry', 'Medication Log', 'View Entries', 'Analyze Data', 'Trigger Detection']
+)
 
 
 # ============================================================
@@ -80,7 +88,7 @@ if page == 'Add Entry':
         if not food or not symptoms:
             st.warning('Please fill in both fields before saving.')
         else:
-            save_entry(
+            save_symptom_entry(
                 date=datetime.date.today(),
                 food=food,
                 symptoms=symptoms,
@@ -90,12 +98,73 @@ if page == 'Add Entry':
 
 
 # ============================================================
+# MEDICATION LOG
+# ============================================================
+
+elif page == 'Medication Log':
+    st.header('Medication log')
+
+    # --- Log a new medication ---
+    st.subheader('Log a medication')
+
+    medication = st.text_input('Medication name')
+
+    # st.time_input() shows a time picker — much easier on a
+    # phone than typing a time manually. It returns a time object.
+    # We default it to the current time so you rarely need to change it.
+    time_taken = st.time_input('Time taken', value=datetime.datetime.now().time())
+
+    if st.button('Save Medication'):
+        if not medication:
+            st.warning('Please enter a medication name.')
+        else:
+            save_med_entry(
+                date=datetime.date.today(),
+                medication=medication,
+                # .strftime('%H:%M') converts the time object to a
+                # readable string like "14:30" for saving to the sheet.
+                time=time_taken.strftime('%H:%M')
+            )
+            st.success(f'{medication} logged at {time_taken.strftime("%H:%M")}!')
+
+    # --- View medication history ---
+    st.subheader('Medication history')
+    med_df = load_data('Medications')
+
+    if len(med_df) == 0:
+        st.info('No medications logged yet.')
+    else:
+        st.dataframe(med_df, use_container_width=True, hide_index=True)
+
+        # --- Most frequently taken medications ---
+        # This tells you which meds you reach for most often.
+        st.subheader('Most frequently taken')
+        freq = (
+            med_df['medication']
+            .value_counts()
+            .reset_index()
+        )
+        freq.columns = ['medication', 'times taken']
+        st.dataframe(freq, use_container_width=True, hide_index=True)
+
+        # --- Export ---
+        st.subheader('Export medication log')
+        csv_data = med_df.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label='Download as CSV',
+            data=csv_data,
+            file_name='my_medication_log.csv',
+            mime='text/csv'
+        )
+
+
+# ============================================================
 # VIEW ENTRIES
 # ============================================================
 
 elif page == 'View Entries':
     st.header('Your symptom history')
-    df = load_data()
+    df = load_data('Sheet1')
 
     if len(df) == 0:
         st.info('No entries yet. Add your first entry from the menu.')
@@ -128,7 +197,7 @@ elif page == 'View Entries':
 
 elif page == 'Analyze Data':
     st.header('Data analysis')
-    df = load_data()
+    df = load_data('Sheet1')
 
     if len(df) == 0:
         st.info('No entries yet. Add your first entry from the menu.')
@@ -176,7 +245,7 @@ elif page == 'Analyze Data':
 
 elif page == 'Trigger Detection':
     st.header('Trigger detection')
-    df = load_data()
+    df = load_data('Sheet1')
 
     if len(df) == 0:
         st.info('No entries yet. Add your first entry from the menu.')
