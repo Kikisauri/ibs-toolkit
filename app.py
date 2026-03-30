@@ -121,11 +121,12 @@ elif page == 'Medication Log':
             save_med_entry(
                 date=datetime.date.today(),
                 medication=medication,
-                # .strftime('%H:%M') converts the time object to a
-                # readable string like "14:30" for saving to the sheet.
-                time=time_taken.strftime('%H:%M')
+                # '%I' = 12 hour format (1-12), '%p' = AM/PM
+                # '%H' would be 24 hour format (0-23)
+                time=time_taken.strftime('%I:%M %p')
             )
-            st.success(f'{medication} logged at {time_taken.strftime("%H:%M")}!')
+            # Same format here so the success message matches
+            st.success(f'{medication} logged at {time_taken.strftime("%I:%M %p")}!')
 
     # --- View medication history ---
     st.subheader('Medication history')
