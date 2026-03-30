@@ -112,7 +112,8 @@ elif page == 'Medication Log':
     # st.time_input() shows a time picker — much easier on a
     # phone than typing a time manually. It returns a time object.
     # We default it to the current time so you rarely need to change it.
-    time_taken = st.time_input('Time taken', value=datetime.datetime.now().time())
+    # step=60 is required for Streamlit to display in 12 hour format
+    time_taken = st.time_input('Time taken', value=datetime.datetime.now().time(), step=60)
 
     if st.button('Save Medication'):
         if not medication:
