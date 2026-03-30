@@ -20,6 +20,7 @@ def get_sheet(tab_name):
     sheet = client.open("IBS Tracker Data").worksheet(tab_name)
     return sheet
 
+@st.cache_data(ttl=30)
 def load_data(tab_name):
     """Load all rows from a specific tab into a DataFrame."""
     sheet = get_sheet(tab_name)
@@ -50,7 +51,7 @@ def save_med_entry(date, medication, time):
 # call in the file. layout='wide' uses the full screen width.
 
 st.set_page_config(page_title='IBS Tracker', layout='wide')
-st.title('IBS Symptom Tracker')
+st.title('IBS Tracker')
 st.write('Track your food, symptoms, and triggers in one place.')
 
 # st.sidebar.radio() creates the navigation menu in the side panel.
