@@ -113,7 +113,10 @@ elif page == 'Medication Log':
     # phone than typing a time manually. It returns a time object.
     # We default it to the current time so you rarely need to change it.
     # step=60 is required for Streamlit to display in 12 hour format
-    time_taken = st.time_input('Time taken', value=datetime.datetime.now().time(), step=60)
+    # st.time_input doesn't support 12 hour format yet, so we use
+    # a text input instead and let the user type it naturally
+    default_time = datetime.datetime.now().strftime('%I:%M %p')
+    time_taken = st.text_input('Time taken (e.g. 2:30 PM)', value=default_time)
 
     if st.button('Save Medication'):
         if not medication:
@@ -124,10 +127,10 @@ elif page == 'Medication Log':
                 medication=medication,
                 # '%I' = 12 hour format (1-12), '%p' = AM/PM
                 # '%H' would be 24 hour format (0-23)
-                time=time_taken.strftime('%I:%M %p')
+                time=time_taken
             )
             # Same format here so the success message matches
-            st.success(f'{medication} logged at {time_taken.strftime("%I:%M %p")}!')
+            st.success(f'{medication} logged at {time_taken}!')
 
     # --- View medication history ---
     st.subheader('Medication history')
