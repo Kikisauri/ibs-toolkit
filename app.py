@@ -50,8 +50,9 @@ def save_med_entry(date, medication, time):
 # st.set_page_config() must always be the very first Streamlit
 # call in the file. layout='wide' uses the full screen width.
 
-st.set_page_config(page_title='IBS Tracker', layout='wide')
+st.set_page_config(page_title='IBS Tracker', page_icon='🦕', layout='wide')
 st.title('IBS Tracker')
+st.image('icon.PNG', width=80)
 st.write('Track your food, symptoms, and triggers in one place.')
 
 # st.sidebar.radio() creates the navigation menu in the side panel.
