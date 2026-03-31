@@ -774,7 +774,4 @@ elif page == '🤖 AI Suggestions':
                     # so my whole app doesn't crash if something goes
                     # wrong — it just shows me a friendly error message.
                     except Exception as e:
-                        st.error(
-                            'Something went wrong getting suggestions. '
-                            'Please try again in a moment.'
-                        )
+                        st.error(f'Error: {str(e)}')
