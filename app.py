@@ -294,7 +294,7 @@ if os.path.exists('icon.PNG'):
     st.image('icon.PNG', width=80)
 
 st.title('IBS Tracker 🦕')
-st.write('Tracks Kiki\'s meals, symptoms, and triggers all in one place.')
+st.write('Track Kiki\'s meals, symptoms, and triggers all in one place.')
 
 
 # ============================================================
