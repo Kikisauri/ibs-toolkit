@@ -273,14 +273,44 @@ div[role='radiogroup'] label {
 // used community trick that clicks the sidebar close button
 // automatically after every page rerun.
 // It makes my app feel much more like a native phone app.
-window.addEventListener('load', function() {
-    setTimeout(function() {
-        var closeBtn = window.parent.document.querySelector(
-            '[data-testid="collapsedControl"]'
-        );
-        if (closeBtn) closeBtn.click();
-    }, 300);
-});
+            
+function closeSidebar() {
+    // I try to find the sidebar close button in the parent window
+    // because Streamlit renders inside an iframe on mobile
+    var attempts = [
+        function() {
+            return window.parent.document.querySelector(
+                '[data-testid="collapsedControl"]'
+            );
+        },
+        function() {
+            return window.parent.document.querySelector(
+                'button[kind="header"]'
+            );
+        },
+        function() {
+            return window.parent.document.querySelector(
+                '[data-testid="baseButton-header"]'
+            );
+        }
+    ];
+
+    // I try each selector and click the first one that works
+    for (var i = 0; i < attempts.length; i++) {
+        try {
+            var btn = attempts[i]();
+            if (btn) {
+                btn.click();
+                return;
+            }
+        } catch(e) {}
+    }
+}
+
+// I try at multiple delays in case the sidebar loads slowly
+setTimeout(closeSidebar, 100);
+setTimeout(closeSidebar, 300);
+setTimeout(closeSidebar, 600);
 </script>
 """, unsafe_allow_html=True)
 
@@ -349,7 +379,7 @@ if page == '🍽 Add Entry':
     # I show a live text label so the number feels meaningful.
     # This updates instantly as I drag the slider.
     if severity <= 3:
-        st.write(f'Barely noticeable, we\'re okay 🤍 {severity} — mild')
+        st.write(f'Barely noticeable, Kiki is okay 🤍 {severity} — mild')
     elif severity <= 6:
         st.write(f'Kiki is not thriving right now 😩 {severity} — moderate')
     else:
@@ -454,7 +484,7 @@ elif page == '💊 Medication Log':
         # I use st.download_button() to let myself export my data.
         # .to_csv(index=False) converts my DataFrame to CSV text.
         # .encode('utf-8') converts the text to bytes for download.
-        st.subheader('Export medication log')
+        st.subheader('Export Medication Log')
         csv_data = med_df.to_csv(index=False).encode('utf-8')
         st.download_button(
             label='Download as CSV',
