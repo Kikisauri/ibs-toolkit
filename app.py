@@ -236,25 +236,15 @@ st.set_page_config(
 
 
 # ============================================================
-# SECTION 6: CUSTOM CSS AND SIDEBAR COLLAPSE
+# SECTION 6: CUSTOM CSS
 # ============================================================
 # st.markdown() with unsafe_allow_html=True lets me inject
 # raw HTML and CSS into my app. This is how I customize things
 # Streamlit doesn't support natively.
 #
-# What my CSS does:
-# 1. Adds padding/spacing between sidebar radio menu items
-#    so they're easier for me to tap on my phone without
-#    hitting the wrong one accidentally
-# 2. The JavaScript at the bottom is my sidebar collapse
-#    workaround — when Streamlit reruns after I tap a menu
-#    item, this JS finds the sidebar close button and clicks
-#    it automatically so I can see my page content straight away.
-#    querySelector finds the collapse arrow button in
-#    Streamlit's HTML by its data-testid attribute.
-#    setTimeout waits 300ms before clicking — without this
-#    delay the sidebar hasn't finished opening yet and the
-#    click doesn't register properly.
+# My CSS adds padding/spacing between sidebar radio menu items
+# so they're easier for me to tap on my phone without
+# hitting the wrong one accidentally.
 
 st.markdown("""
 <style>
@@ -265,53 +255,11 @@ div[role='radiogroup'] label {
     display: block !important;
     font-size: 15px !important;
 }
+/* I control my header and subheader sizes here */
+h1 { font-size: 28px !important; }    
+h2 { font-size: 22px !important; }
+h3 { font-size: 18px !important; }
 </style>
-
-<script>
-// This is my sidebar auto-collapse workaround for mobile.
-// It's not officially supported by Streamlit — it's a widely
-// used community trick that clicks the sidebar close button
-// automatically after every page rerun.
-// It makes my app feel much more like a native phone app.
-            
-function closeSidebar() {
-    // I try to find the sidebar close button in the parent window
-    // because Streamlit renders inside an iframe on mobile
-    var attempts = [
-        function() {
-            return window.parent.document.querySelector(
-                '[data-testid="collapsedControl"]'
-            );
-        },
-        function() {
-            return window.parent.document.querySelector(
-                'button[kind="header"]'
-            );
-        },
-        function() {
-            return window.parent.document.querySelector(
-                '[data-testid="baseButton-header"]'
-            );
-        }
-    ];
-
-    // I try each selector and click the first one that works
-    for (var i = 0; i < attempts.length; i++) {
-        try {
-            var btn = attempts[i]();
-            if (btn) {
-                btn.click();
-                return;
-            }
-        } catch(e) {}
-    }
-}
-
-// I try at multiple delays in case the sidebar loads slowly
-setTimeout(closeSidebar, 100);
-setTimeout(closeSidebar, 300);
-setTimeout(closeSidebar, 600);
-</script>
 """, unsafe_allow_html=True)
 
 
@@ -774,4 +722,7 @@ elif page == '🤖 AI Suggestions':
                     # so my whole app doesn't crash if something goes
                     # wrong — it just shows me a friendly error message.
                     except Exception as e:
-                        st.error(f'Error: {str(e)}')
+                        st.error(
+                            'Something went wrong getting suggestions. '
+                            'Please try again in a moment.'
+                        )
