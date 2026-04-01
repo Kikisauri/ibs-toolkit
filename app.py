@@ -256,6 +256,7 @@ Each suggestion should be 2-3 sentences with preparation tips."""
 
     return result_text
 
+
 # ============================================================
 # SECTION 5: PAGE SETUP
 # ============================================================
@@ -672,11 +673,11 @@ elif page == '⚡ Trigger Detection':
 
 
 # ============================================================
-# SECTION 13: AI MEAL SUGGESTIONS PAGE
+# SECTION 13: AI SUGGESTIONS PAGE
 # ============================================================
 
-elif page == '🤖 Meal Suggestions':
-    st.header('Meal Suggestions')
+elif page == '🤖 AI Suggestions':
+    st.header('Suggestions for Kiki')
     st.write('IBS-friendly meal ideas personalized for Kiki.')
 
     df = load_data('Symptoms')
