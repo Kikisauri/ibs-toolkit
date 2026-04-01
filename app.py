@@ -143,7 +143,7 @@ def get_ai_suggestions(safe_foods, trigger_foods):
     # I create the Anthropic client using my API key from secrets.
     # I never print or expose this key anywhere in my code.
     client = anthropic.Anthropic(
-        api_key=st.secrets["ANTHROPIC_API_KEY"]
+        api_key=st.secrets["anthropic"]["ANTHROPIC_API_KEY"]
     )
 
     # I sanitize all food names before they reach the AI
