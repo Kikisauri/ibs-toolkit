@@ -554,8 +554,16 @@ if page == '🍽 Add Entry':
         st.session_state['symptom_symptoms'] = ''
     if 'symptom_severity' not in st.session_state:
         st.session_state['symptom_severity'] = 5
-    if 'symptom_meal_time' not in st.session_state:
+    # For the time field, pre-fill with current time on first
+    # visit only. After submit the key is deleted — on rerun
+    # 'symptom_time_loaded' is still True so we fall into the
+    # elif and set it to '' instead of datetime.now() again.
+    # This is what actually makes the field go blank.
+    if 'symptom_time_loaded' not in st.session_state:
         st.session_state['symptom_meal_time'] = datetime.datetime.now().strftime('%I:%M %p')
+        st.session_state['symptom_time_loaded'] = True
+    elif 'symptom_meal_time' not in st.session_state:
+        st.session_state['symptom_meal_time'] = ''
     if 'symptom_water' not in st.session_state:
         st.session_state['symptom_water'] = 8
 
@@ -635,8 +643,12 @@ elif page == '💊 Medication Log':
     # with the symptom form keys.
     if 'med_medication' not in st.session_state:
         st.session_state['med_medication'] = ''
-    if 'med_time' not in st.session_state:
+    # Same first-load flag pattern for the medication time field.
+    if 'med_time_loaded' not in st.session_state:
         st.session_state['med_time'] = datetime.datetime.now().strftime('%I:%M %p')
+        st.session_state['med_time_loaded'] = True
+    elif 'med_time' not in st.session_state:
+        st.session_state['med_time'] = ''
 
     medication = st.text_input('Medication name', key='med_medication')
     time_taken = st.text_input(
