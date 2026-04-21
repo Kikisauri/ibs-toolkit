@@ -260,7 +260,7 @@ if os.path.exists('icon.PNG'):
     st.image('icon.PNG', width=70)
 
 st.title("Kiki's IBS Tracker 🦕")
-st.caption("documenting the betrayals one meal at a time")
+st.caption("Documenting the betrayals one meal at a time")
 
 
 # ============================================================
@@ -385,11 +385,11 @@ st.sidebar.title('🦕 Kiki\'s Diary')
 page = st.sidebar.radio(
     'Go to',
     [
-        '🍽 Log a Meal',
-        '🚨 Log a Flare-Up',
-        '💊 Medications',
+        '🍽 Meals',
+        '🚨 Flare-Ups',
+        '💊 Meds',
         '📊 My Patterns',
-        '🤖 AI Chef'
+        '🤖 Kiki\'s Chef'
     ],
     label_visibility='collapsed'
 )
@@ -406,7 +406,7 @@ page = st.sidebar.radio(
 
 if page == '🍽 Log a Meal':
     st.header('🍽 Log a Meal')
-    st.caption("what did we feed the beast today?")
+    st.caption("What did Kiki feed the beast today?")
     st.write(
         "Log what you ate and come back in 30–60 minutes — "
         "Kiki will be asked how she feels when she opens the app again. 🕐"
@@ -462,7 +462,7 @@ if page == '🍽 Log a Meal':
 
 elif page == '🚨 Log a Flare-Up':
     st.header('🚨 Log a Flare-Up')
-    st.caption("sending strength. let's document this so we can figure it out. 💙")
+    st.caption("Ouch, sending Kiki strength 💙")
 
     # Initialize all session_state keys
     for key, default in [
@@ -537,7 +537,7 @@ elif page == '🚨 Log a Flare-Up':
         placeholder='e.g. heating pad helped, couldn\'t eat for 2 days, stress from work...'
     )
 
-    if st.button('Log flare-up 🚨'):
+    if st.button('Log Flare-Up 🚨'):
         # Save as a whole number when possible (5 not 5.0).
         # Keep the decimal only for half-day values like 0.5 or 1.5.
         duration_clean = int(duration) if duration == int(duration) else duration
@@ -581,7 +581,7 @@ elif page == '🚨 Log a Flare-Up':
 
 elif page == '💊 Medications':
     st.header('💊 Medication Log')
-    st.caption("the things that save Kiki on a daily basis")
+    st.caption("The meds that save Kiki on a daily basis")
 
     if 'med_medication' not in st.session_state:
         st.session_state['med_medication'] = ''
@@ -636,7 +636,7 @@ elif page == '💊 Medications':
 
 elif page == '📊 My Patterns':
     st.header('📊 My Patterns')
-    st.caption("what the data says about Kiki's gut")
+    st.caption("What the data says about Kiki's gut")
 
     df = load_data('Symptoms')
 
