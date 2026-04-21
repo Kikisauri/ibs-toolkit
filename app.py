@@ -260,7 +260,7 @@ if os.path.exists('icon.PNG'):
     st.image('icon.PNG', width=70)
 
 st.title("Kiki's IBS Tracker 🦕")
-st.caption("Documenting the betrayals one meal at a time")
+st.caption("Documenting the betrayals one meal at a time!")
 
 
 # ============================================================
