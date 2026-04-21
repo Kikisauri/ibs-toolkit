@@ -404,7 +404,7 @@ page = st.sidebar.radio(
 # This two-step flow gives more accurate symptom data than
 # logging everything at once right after eating.
 
-if page == '🍽 Log a Meal':
+if page == '🍽 Meals':
     st.header('🍽 Log a Meal')
     st.caption("What did Kiki feed the beast today?")
     st.write(
@@ -460,7 +460,7 @@ if page == '🍽 Log a Meal':
 # checkbox is the most important field here because it's what
 # feeds the IBS + Period analysis in My Patterns.
 
-elif page == '🚨 Log a Flare-Up':
+elif page == '🚨 Flare-Ups':
     st.header('🚨 Log a Flare-Up')
     st.caption("Ouch, sending Kiki strength 💙")
 
@@ -491,7 +491,7 @@ elif page == '🚨 Log a Flare-Up':
         key='flare_start_time'
     )
 
-    # Duration in days with 0.5 steps — so 0.5 = half a day,
+    # Duration in days
     # 1.0 = one full day, 7.0 = a week, etc.
     # This replaced the old hours-based field because Kiki's
     # flare-ups last days to weeks, not a few hours.
@@ -579,7 +579,7 @@ elif page == '🚨 Log a Flare-Up':
 # SECTION 12: MEDICATIONS PAGE
 # ============================================================
 
-elif page == '💊 Medications':
+elif page == '💊 Meds':
     st.header('💊 Medication Log')
     st.caption("The meds that save Kiki on a daily basis.")
 
@@ -946,8 +946,8 @@ elif page == '📊 My Patterns':
 # SECTION 14: AI CHEF PAGE
 # ============================================================
 
-elif page == '🤖 AI Chef':
-    st.header('🤖 AI Chef')
+elif page == '🤖 Kiki\'s Chef':
+    st.header('🤖 Kiki\'s Personal AI Chef')
     st.caption("Kiki's personal gut-friendly chef, at your service")
 
     df = load_data('Symptoms')
