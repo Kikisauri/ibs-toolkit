@@ -58,7 +58,7 @@ def load_recipes_full():
         pork_flags = [
             'pork chop', 'pork shoulder', 'pork loin', 'pork ribs',
             'pernil', 'lechon', 'chuleta de cerdo',
-            'chorizo'
+            'chorizo',
         ]
         blocks = []
         for r in recipes_list:
@@ -336,13 +336,13 @@ try:
                 )
 
                 if banner_severity <= 3:
-                    st.caption(f'🤍 {banner_severity} — we survived, barely')
+                    st.caption(f'🤍 {banner_severity} — We survived, barely!')
                 elif banner_severity <= 6:
-                    st.caption(f'😩 {banner_severity} — not thriving rn')
+                    st.caption(f'😩 {banner_severity} — Not thriving rn.')
                 elif banner_severity <= 8:
-                    st.caption(f'🚨 {banner_severity} — this was a mistake')
+                    st.caption(f'🚨 {banner_severity} — This was a mistake.')
                 else:
-                    st.caption(f'💀 {banner_severity} — tell no one we ate that')
+                    st.caption(f'💀 {banner_severity} — Tell no one we ate that.')
 
                 col_save, col_dismiss = st.columns([1, 1])
                 with col_save:
@@ -507,15 +507,15 @@ elif page == '🚨 Log a Flare-Up':
         key='flare_pain'
     )
     if pain <= 3:
-        st.caption(f'🤍 {pain} — manageable, we got this')
+        st.caption(f'🤍 {pain} — Manageable, we got this!')
     elif pain <= 5:
-        st.caption(f'😬 {pain} — not great not terrible')
+        st.caption(f'😬 {pain} — Not great, not terrible.')
     elif pain <= 7:
-        st.caption(f'😩 {pain} — rough one')
+        st.caption(f'😩 {pain} — Rough one.')
     elif pain <= 9:
-        st.caption(f'🚨 {pain} — this was really bad')
+        st.caption(f'🚨 {pain} — This was really bad.')
     else:
-        st.caption(f'🏥 {pain} — hospital territory')
+        st.caption(f'🏥 {pain} — Hospital territory.')
 
     suspected_trigger = st.text_input(
         '🤔 What do you think triggered it? (food, stress, period, no idea...)',
@@ -581,7 +581,7 @@ elif page == '🚨 Log a Flare-Up':
 
 elif page == '💊 Medications':
     st.header('💊 Medication Log')
-    st.caption("The meds that save Kiki on a daily basis")
+    st.caption("The meds that save Kiki on a daily basis.")
 
     if 'med_medication' not in st.session_state:
         st.session_state['med_medication'] = ''
@@ -702,14 +702,14 @@ elif page == '📊 My Patterns':
             col1, col2 = st.columns(2)
             with col1:
                 st.subheader('✅ Safe foods')
-                st.caption('avg severity below 4 — Kiki can eat these')
+                st.caption('Avg severity below 4 — Kiki can eat these')
                 if len(safe) == 0:
                     st.write("None confirmed safe yet — keep logging!")
                 else:
                     st.dataframe(safe, use_container_width=True, hide_index=True)
             with col2:
                 st.subheader('❌ Trigger foods')
-                st.caption('avg severity 4+ — these are the criminals')
+                st.caption('Avg severity 4+ — these are the criminals')
                 if len(risky) == 0:
                     st.write("No confirmed triggers yet!")
                 else:
@@ -726,7 +726,7 @@ elif page == '📊 My Patterns':
                 if len(flare_df) == 0:
                     st.info(
                         "No flare-ups logged yet. Use 🚨 Log a Flare-Up "
-                        "when an episode happens — the more you log, the "
+                        "When an episode happens — the more you log, the "
                         "clearer the patterns get."
                     )
                 else:
