@@ -58,7 +58,7 @@ def load_recipes_full():
         pork_flags = [
             'pork chop', 'pork shoulder', 'pork loin', 'pork ribs',
             'pernil', 'lechon', 'chuleta de cerdo',
-            'chorizo', 'longaniza', 'tocino'
+            'chorizo'
         ]
         blocks = []
         for r in recipes_list:
